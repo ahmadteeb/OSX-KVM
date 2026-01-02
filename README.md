@@ -149,15 +149,15 @@ processors work just fine (even for macOS Sonoma).
 * Convert the downloaded `BaseSystem.dmg` file into the `BaseSystem.img` file.
 
   ```
-  dmg2img -i BaseSystem.dmg BaseSystem.img
+  qemu-img convert -O raw BaseSystem.dmg BaseSystem.img
   ```
 
 * Create a virtual HDD image where macOS will be installed. If you change the
-  name of the disk image from `mac_hdd_ng.img` to something else, the boot scripts
+  name of the disk image from `mac_hdd.qcow2` to something else, the boot scripts
   will need to be updated to point to the new image name.
 
   ```
-  qemu-img create -f qcow2 mac_hdd_ng.img 256G
+  qemu-img create -f qcow2 mac_hdd.qcow2 256G
   ```
 
   NOTE: Create this HDD image file on a fast SSD/NVMe disk for best results.
@@ -189,7 +189,16 @@ processors work just fine (even for macOS Sonoma).
     trick usually.
 
     ```
-    sed "s/CHANGEME/$USER/g" macOS-libvirt-Catalina.xml > macOS.xml
+    DESTINATION=/var/lib/libvirt/images/macOS/
+
+    sudo mkdir $DESTINATION
+    sudo cp OVMF_CODE.fd $DESTINATION
+    sudo cp OVMF_VARS.fd $DESTINATION
+    sudo cp OpenCore/OpenCore.qcow2 $DESTINATION
+    sudo cp mac_hdd.qcow2 $DESTINATION
+    sudo cp BaseSystem.img $DESTINATION
+
+    sed 's|/home/CHANGEME/OSX-KVM/|$DESTINATION|g' macOS-libvirt-Catalina.xml > macOS.xml
 
     virt-xml-validate macOS.xml
     ```
@@ -203,8 +212,8 @@ processors work just fine (even for macOS Sonoma).
   - If needed, grant necessary permissions to libvirt-qemu user,
 
     ```
-    sudo setfacl -m u:libvirt-qemu:rx /home/$USER
-    sudo setfacl -R -m u:libvirt-qemu:rx /home/$USER/OSX-KVM
+    sudo setfacl -m u:libvirt-qemu:rx $DESTINATION
+    sudo setfacl -R -m u:libvirt-qemu:rx $DESTINATION
     ```
 
   - Launch `virt-manager` and start the `macOS` virtual machine.
