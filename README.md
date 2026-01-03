@@ -200,8 +200,8 @@ processors work just fine (even for macOS Sonoma).
     sudo cp mac_hdd.qcow2 $DESTINATION
     sudo cp BaseSystem.img $DESTINATION
 
-    sed 's|/home/CHANGEME/OSX-KVM/|$DESTINATION|g' macOS-libvirt-Catalina.xml > macOS.xml
-
+    sed "s|/home/CHANGEME/OSX-KVM/|$DESTINATION|g" macOS-libvirt-Catalina.xml > macOS.xml
+    
     virt-xml-validate macOS.xml
     ```
 
