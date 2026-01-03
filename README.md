@@ -193,7 +193,7 @@ processors work just fine (even for macOS Sonoma).
     OVMF_DESTINATION=$DESTINATION/OVNF/
 
     sudo mkdir $DESTINATION
-    sudo 
+    sudo mkdir $OVMF_DESTINATION
     sudo cp OVMF_CODE.fd $OVMF_DESTINATION
     sudo cp OVMF_VARS.fd $OVMF_DESTINATION
     sudo cp OpenCore/OpenCore.qcow2 $DESTINATION
