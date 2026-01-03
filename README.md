@@ -190,7 +190,7 @@ processors work just fine (even for macOS Sonoma).
 
     ```
     DESTINATION=/var/lib/libvirt/images/macOS/
-    OVMF_DESTINATION=$DESTINATION/OVNF/
+    OVMF_DESTINATION=$DESTINATION/OVMF/
 
     sudo mkdir $DESTINATION
     sudo mkdir $OVMF_DESTINATION
