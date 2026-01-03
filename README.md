@@ -190,10 +190,12 @@ processors work just fine (even for macOS Sonoma).
 
     ```
     DESTINATION=/var/lib/libvirt/images/macOS/
+    OVMF_DESTINATION=$DESTINATION/OVNF/
 
     sudo mkdir $DESTINATION
-    sudo cp OVMF_CODE.fd $DESTINATION
-    sudo cp OVMF_VARS.fd $DESTINATION
+    sudo 
+    sudo cp OVMF_CODE.fd $OVMF_DESTINATION
+    sudo cp OVMF_VARS.fd $OVMF_DESTINATION
     sudo cp OpenCore/OpenCore.qcow2 $DESTINATION
     sudo cp mac_hdd.qcow2 $DESTINATION
     sudo cp BaseSystem.img $DESTINATION

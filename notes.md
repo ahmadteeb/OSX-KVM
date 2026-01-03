@@ -1,4 +1,4 @@
-### macOS Sonoma support
+### macOS Sonoma or later support
 
 - Change `Penryn` to `Haswell-noTSX` in OpenCore-Boot.sh file.
 
