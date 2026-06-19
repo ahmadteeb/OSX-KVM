@@ -41,10 +41,10 @@
   <currentMemory unit='KiB'>4194304</currentMemory>
   <vcpu placement='static'>4</vcpu>
   <os>
-    <type arch='x86_64' machine='pc-q35-4.2'>hvm</type>
+    <type arch='x86_64' machine='q35'>hvm</type>
     <!-- We don't need patched OVMF anymore when using latest OpenCore, stock one is okay -->
     <loader readonly='yes' type='pflash'>/home/CHANGEME/OSX-KVM/OVMF/OVMF_CODE.fd</loader>
-    <nvram>/home/CHANGEME/OSX-KVM/OVMF/OVMF_VARS.fd</nvram>
+    <nvram>/home/CHANGEME/OSX-KVM/OVMF/OVMF_VARS-1920x1080.fd</nvram>
   </os>
   <features>
     <acpi/>
