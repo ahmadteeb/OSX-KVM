@@ -196,7 +196,7 @@ processors work just fine (even for macOS Sonoma).
 
     sudo mkdir $DESTINATION
     sudo mkdir $OVMF_DESTINATION
-    sudo cp OVMF_CODE.fd $OVMF_DESTINATION
+    sudo cp OVMF_CODE_4M.fd $OVMF_DESTINATION
     sudo cp OVMF_VARS-1920x1080.fd $OVMF_DESTINATION
     sudo cp OpenCore/OpenCore.qcow2 $DESTINATION
     sudo cp mac_hdd.qcow2 $DESTINATION
