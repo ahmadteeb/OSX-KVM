@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain type="kvm">
+  <name>macOS</name>
+
+  <sysinfo type="smbios">
+    <system>
+      <entry name="manufacturer">Apple Inc.</entry>
+      <entry name="product">MacBookPro14,3</entry>
+    </system>
+  </sysinfo>
+
+  <memory unit="MiB">4096</memory>
+  <currentMemory unit="MiB">4096</currentMemory>
+
+  <vcpu placement="static">4</vcpu>
+
+  <cpu mode="custom" match="exact" check="none">
+    <model fallback="allow">Skylake-Client</model>
+    <vendor>GenuineIntel</vendor>
+
+    <feature policy="require" name="invtsc"/>
+    <feature policy="require" name="ssse3"/>
+    <feature policy="require" name="sse4.2"/>
+    <feature policy="require" name="popcnt"/>
+    <feature policy="require" name="avx"/>
+    <feature policy="require" name="aes"/>
+    <feature policy="require" name="xsave"/>
+    <feature policy="require" name="xsaveopt"/>
+
+    <feature policy="disable" name="hle"/>
+    <feature policy="disable" name="rtm"/>
+  </cpu>
+
+  <os>
+    <type arch="x86_64" machine="q35">hvm</type>
+
+    <loader readonly="yes" type="pflash">/home/CHANGEME/OSX-KVM/OVMF/OVMF_CODE_4M.fd</loader>
+
+    <nvram>/home/CHANGEME/OSX-KVM/OVMF/OVMF_VARS-1920x1080.fd</nvram>
+  </os>
+
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+
+  <clock offset="localtime">
+    <timer name="rtc" tickpolicy="catchup"/>
+    <timer name="pit" tickpolicy="delay"/>
+    <timer name="hpet" present="no"/>
+  </clock>
+
+  <hyperv>
+    <relaxed state="on"/>
+    <vapic state="on"/>
+    <spinlocks state="on" retries="8191"/>
+  </hyperv>
+
+  <devices>
+
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+
+    <!-- SATA Controller -->
+    <controller type="sata" index="0"/>
+
+    <!-- USB 3.0 -->
+    <controller type="usb" index="0" model="ich9-ehci1"/>
+    <controller type="usb" index="0" model="ich9-uhci1">
+      <master startport="0"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-uhci2">
+      <master startport="2"/>
+    </controller>
+    <controller type="usb" index="0" model="ich9-uhci3">
+      <master startport="4"/>
+    </controller>
+
+    <!-- OpenCore -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/home/CHANGEME/OSX-KVM/OpenCore.qcow2"/>
+      <target dev="sda" bus="sata"/>
+    </disk>
+
+    <!-- Installer -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="raw"/>
+      <source file="/home/CHANGEME/OSX-KVM/BaseSystem.img"/>
+      <target dev="sdb" bus="sata"/>
+    </disk>
+
+    <!-- macOS HDD -->
+    <disk type="file" device="disk">
+      <driver name="qemu" type="qcow2"/>
+      <source file="/home/CHANGEME/OSX-KVM/mac_hdd.qcow2"/>
+      <target dev="sdc" bus="sata"/>
+    </disk>
+
+    <!-- Network -->
+    <interface type="network">
+      <mac address="52:54:00:c9:18:27"/>
+      <source network="default"/>
+      <model type="virtio"/>
+      <address type="pci" domain="0x0000" bus="0x00" slot="0x0a" function="0x0"/>
+    </interface>
+    
+    <!-- Audio -->
+    <sound model="ich9"/>
+
+    <!-- USB Input -->
+    <input type="keyboard" bus="usb"/>
+    <input type="mouse" bus="usb"/>
+
+    <!-- Graphics -->
+    <video>
+      <model type="none"/>
+    </video>
+
+    <graphics type="spice" autoport="yes" listen="127.0.0.1">
+      <listen type="address" address="127.0.0.1"/>
+      <auth enable="no"/>
+    </graphics>
+
+    <memballoon model="none"/>
+
+  </devices>
+
+  <qemu:commandline xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0">
+
+    <!-- Apple SMC -->
+    <qemu:arg value="-device"/>
+    <qemu:arg value="isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"/>
+
+    <!-- VMware SVGA -->
+    <qemu:arg value="-device"/>
+    <qemu:arg value="vmware-svga,bus=pcie.0,addr=0x09"/>
+
+    <!-- CPU flags -->
+    <qemu:arg value="-cpu"/>
+    <qemu:arg value="Skylake-Client,-hle,-rtm,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt"/>
+
+    <!-- Network (identical to the working script) -->
+    <!-- Uncomment the following lines if the interface is not working (should remove the interface). -->
+    <!-- <qemu:arg value="-netdev"/>
+    <qemu:arg value="user,id=net0,hostfwd=tcp::2222-:22"/>
+    <qemu:arg value="-device"/>
+    <qemu:arg value="virtio-net-pci,netdev=net0,id=net0,mac=52:54:00:c9:18:27"/> -->
+
+  </qemu:commandline>
+
+</domain>

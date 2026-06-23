@@ -186,7 +186,7 @@ processors work just fine (even for macOS Sonoma).
 
 - (OPTIONAL) Use this macOS VM disk with libvirt (virt-manager / virsh stuff).
 
-  - Edit `macOS-libvirt-Catalina.xml` file and change the various file paths (search
+  - Edit `macOS-libvirt-template.xml` file and change the various file paths (search
     for `CHANGEME` strings in that file). The following command should do the
     trick usually.
 
@@ -202,7 +202,7 @@ processors work just fine (even for macOS Sonoma).
     sudo cp mac_hdd.qcow2 $DESTINATION
     sudo cp BaseSystem.img $DESTINATION
 
-    sed "s|/home/CHANGEME/OSX-KVM/|$DESTINATION|g" macOS-libvirt-Catalina.xml > macOS.xml
+    sed "s|/home/CHANGEME/OSX-KVM/|$DESTINATION|g" macOS-libvirt-template.xml > macOS.xml
     
     virt-xml-validate macOS.xml
     ```
