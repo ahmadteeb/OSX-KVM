@@ -42,6 +42,11 @@
   <features>
     <acpi/>
     <apic/>
+    <hyperv>
+      <relaxed state="on"/>
+      <vapic state="on"/>
+      <spinlocks state="on" retries="8191"/>
+    </hyperv>
   </features>
 
   <clock offset="localtime">
@@ -49,12 +54,6 @@
     <timer name="pit" tickpolicy="delay"/>
     <timer name="hpet" present="no"/>
   </clock>
-
-  <hyperv>
-    <relaxed state="on"/>
-    <vapic state="on"/>
-    <spinlocks state="on" retries="8191"/>
-  </hyperv>
 
   <devices>
 
@@ -110,6 +109,12 @@
     <!-- USB Input -->
     <input type="keyboard" bus="usb"/>
     <input type="mouse" bus="usb"/>
+    
+    <!-- USB Redirection (SPICE) -->
+    <!-- Repeat the following command to allow more USB devices to be redirected increment the port. -->
+    <redirdev bus='usb' type='spicevmc'>
+      <address type='usb' bus='0' port='1'/>
+    </redirdev>
 
     <!-- Graphics -->
     <video>
@@ -118,7 +123,6 @@
 
     <graphics type="spice" autoport="yes" listen="127.0.0.1">
       <listen type="address" address="127.0.0.1"/>
-      <auth enable="no"/>
     </graphics>
 
     <memballoon model="none"/>
