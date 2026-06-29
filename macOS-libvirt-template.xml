@@ -112,9 +112,10 @@
     
     <!-- USB Redirection (SPICE) -->
     <!-- Repeat the following command to allow more USB devices to be redirected increment the port. -->
-    <redirdev bus='usb' type='spicevmc'>
-      <address type='usb' bus='0' port='1'/>
+    <redirdev bus="usb" type="spicevmc">
+      <address type="usb" bus="0" port="1"/>
     </redirdev>
+
 
     <!-- Graphics -->
     <video>
