@@ -196,11 +196,14 @@ processors work just fine (even for macOS Sonoma).
 
     sudo mkdir $DESTINATION
     sudo mkdir $OVMF_DESTINATION
-    sudo cp OVMF_CODE_4M.fd $OVMF_DESTINATION
-    sudo cp OVMF_VARS-1920x1080.fd $OVMF_DESTINATION
-    sudo cp OpenCore/OpenCore.qcow2 $DESTINATION
-    sudo cp mac_hdd.qcow2 $DESTINATION
-    sudo cp BaseSystem.img $DESTINATION
+
+    sudo chown -R $USER:libvirt $DESTINATION
+
+    cp OVMF_CODE_4M.fd $OVMF_DESTINATION
+    cp OVMF_VARS-1920x1080.fd $OVMF_DESTINATION
+    cp OpenCore/OpenCore.qcow2 $DESTINATION
+    cp mac_hdd.qcow2 $DESTINATION
+    cp BaseSystem.img $DESTINATION
 
     sed "s|/home/CHANGEME/OSX-KVM/|$DESTINATION|g" macOS-libvirt-template.xml > macOS.xml
     
