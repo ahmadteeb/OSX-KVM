@@ -225,6 +225,101 @@ processors work just fine (even for macOS Sonoma).
 
   - Launch `virt-manager` and start the `macOS` virtual machine.
 
+  **Apple ID / App Store login fix for Sequoia (macOS 15+)**
+
+  If you cannot sign in to Apple ID or use the App Store on Sequoia (macOS 15) or later, add a kernel patch to OpenCore's `config.plist` to hide the VM flag `kern.hv_vmm_present`.
+
+  ```sh
+  sudo modprobe nbd
+  sudo qemu-nbd -c /dev/nbd0 $DESTINATION/OpenCore.qcow2
+  sudo mount /dev/nbd0p1 /mnt
+  sudo nano /mnt/EFI/OC/config.plist
+  ```
+
+  In `config.plist` locate the `Kernel` section and the `Patch` array. Paste the following two patch entries into that `Patch` array (each entry is one dict):
+
+  ```plist
+   <dict>
+    <key>Arch</key>
+    <string>x86_64</string>
+    <key>Base</key>
+    <string></string>
+    <key>Comment</key>
+    <string>Sonoma/Sequoia VM Enabler - PART 1 of 2 - Patch kern.hv_vmm_present=0</string>
+    <key>Count</key>
+    <integer>1</integer>
+    <key>Enabled</key>
+    <true/>
+    <key>Find</key>
+    <data>aGliZXJuYXRlaGlkcmVhZHkAaGliZXJuYXRlY291bnQA</data>
+    <key>Identifier</key>
+    <string>kernel</string>
+    <key>Limit</key>
+    <integer>0</integer>
+    <key>Mask</key>
+    <data></data>
+    <key>MaxKernel</key>
+    <string></string>
+    <key>MinKernel</key>
+    <string>20.4.0</string>
+    <key>Replace</key>
+    <data>aGliZXJuYXRlaGlkcmVhZHkAaHZfdm1tX3ByZXNlbnQA</data>
+    <key>ReplaceMask</key>
+    <data></data>
+    <key>Skip</key>
+    <integer>0</integer>
+  </dict>
+  <dict>
+      <key>Arch</key>
+      <string>x86_64</string>
+      <key>Base</key>
+      <string></string>
+      <key>Comment</key>
+      <string>Sonoma/Sequoia VM Enabler - PART 2 of 2 - Patch kern.hv_vmm_present=0</string>
+      <key>Count</key>
+      <integer>1</integer>
+      <key>Enabled</key>
+      <true/>
+      <key>Find</key>
+      <data>Ym9vdCBzZXNzaW9uIFVVSUQAaHZfdm1tX3ByZXNlbnQA</data>
+      <key>Identifier</key>
+      <string>kernel</string>
+      <key>Limit</key>
+      <integer>0</integer>
+      <key>Mask</key>
+      <data></data>
+      <key>MaxKernel</key>
+      <string></string>
+      <key>MinKernel</key>
+      <string>22.0.0</string>
+      <key>Replace</key>
+      <data>Ym9vdCBzZXNzaW9uIFVVSUQAaGliZXJuYXRlY291bnQA</data>
+      <key>ReplaceMask</key>
+      <data></data>
+      <key>Skip</key>
+      <integer>0</integer>
+  </dict>
+  ```
+
+  Save the file and exit the editor.
+
+  - If you mounted from macOS: reboot the VM.
+  - If you mounted from Linux: unmount and disconnect the QCOW2 image:
+
+    ```sh
+    sudo umount /mnt
+    sudo qemu-nbd -d /dev/nbd0
+    ```
+
+  Verify the patch inside macOS after booting:
+
+  ```sh
+  sysctl kern.hv_vmm_present
+  # should print: kern.hv_vmm_present: 0
+  ```
+
+  Note: This tweak allows Apple ID/App Store logins on Sequoia/15+, but may disable some `qemu-guest-agent` features (copy/paste, hot snapshots) that rely on the hypervisor flag.
+
 
 ### Headless macOS
 
