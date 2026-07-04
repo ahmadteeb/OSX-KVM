@@ -238,7 +238,7 @@ processors work just fine (even for macOS Sonoma).
 
   In `config.plist` locate the `Kernel` section and the `Patch` array. Paste the following two patch entries into that `Patch` array (each entry is one dict):
 
-  ```plist
+  ```xml
    <dict>
     <key>Arch</key>
     <string>x86_64</string>
